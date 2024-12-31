@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { token, setToken } = useContext(AppContext);
+  const { token, setToken, backendUrl } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [state, setState] = useState("Sign Up");
@@ -18,14 +18,11 @@ const Login = () => {
 
     try {
       if (state === "Sign Up") {
-        const { data } = await axios.post(
-          "http://localhost:4000/api/user/register",
-          {
-            name,
-            password,
-            email,
-          }
-        );
+        const { data } = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          password,
+          email,
+        });
         if (data.success) {
           localStorage.setItem("token", data.token);
           setToken(data.token);
@@ -33,13 +30,10 @@ const Login = () => {
           toast.error(data.message);
         }
       } else {
-        const { data } = await axios.post(
-          "http://localhost:4000/api/user/login",
-          {
-            password,
-            email,
-          }
-        );
+        const { data } = await axios.post(backendUrl + "/api/user/login", {
+          password,
+          email,
+        });
         if (data.success) {
           localStorage.setItem("token", data.token);
           setToken(data.token);
